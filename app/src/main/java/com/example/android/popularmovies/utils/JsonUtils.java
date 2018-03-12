@@ -14,6 +14,7 @@ public class JsonUtils {
     private static final String RESULTS = "results";
     private static final String ID = "id";
     private static final String TITLE = "title";
+    private static final String POSTER_PATH = "poster_path";
 
     public static List<Movie> parseMovieResultsJson(String json) throws JSONException {
         JSONObject response = new JSONObject(json);
@@ -30,7 +31,8 @@ public class JsonUtils {
         JSONObject movieJson = new JSONObject(json);
         int id = movieJson.getInt(ID);
         String title = movieJson.getString(TITLE);
-        return new Movie(id, title);
+        String posterPath = movieJson.getString(POSTER_PATH);
+        return new Movie(id, title, posterPath);
     }
 
 }

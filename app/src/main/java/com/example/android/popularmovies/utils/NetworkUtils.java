@@ -20,7 +20,6 @@ public class NetworkUtils {
     private static final String THE_MOVIE_DB_BASE_URL = "http://api.themoviedb.org/3/movie/";
     private static final String PARAM_API_KEY = "api_key";
 
-
     public static URL buildUrl(Context context) {
 
         Uri buildUri = Uri.parse(THE_MOVIE_DB_BASE_URL + "popular").buildUpon()
