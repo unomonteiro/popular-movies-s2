@@ -10,6 +10,10 @@ public class Movie {
         mTitle = title;
     }
 
+    public String getTitle() {
+        return mTitle;
+    }
+
     @Override
     public String toString() {
         return "id=" + mId + ", title='" + mTitle + '\'';

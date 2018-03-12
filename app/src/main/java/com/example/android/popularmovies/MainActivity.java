@@ -1,39 +1,44 @@
 package com.example.android.popularmovies;
 
 import android.annotation.SuppressLint;
+import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Toast;
 
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.utils.JsonUtils;
+import com.example.android.popularmovies.utils.MovieAdapter;
 import com.example.android.popularmovies.utils.NetworkUtils;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
 import java.net.URL;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
+public class MainActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<String>, MovieAdapter.ItemClickListener {
 
-    private TextView mResultView;
+    private MovieAdapter mMovieAdapter;
 
     private static final int MOVIE_LOADER_ID = 0;
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageView picassoIv = findViewById(R.id.picasso_iv);
-        Picasso.with(MainActivity.this).load("http://i.imgur.com/DvpvklR.png").into(picassoIv);
-        mResultView = findViewById(R.id.results_tv);
+        mRecyclerView = findViewById(R.id.movies_recycler_view);
+        mMovieAdapter = new MovieAdapter(this);
+        int columnCount = getViewColumnCount(mRecyclerView, R.dimen.movie_width);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, Math.max(2,columnCount)));
+        mRecyclerView.setAdapter(mMovieAdapter);
 
         getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
     }
@@ -79,15 +84,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            String resultString = TextUtils.join(",\n", results);
-            mResultView.setText(resultString);
+            mMovieAdapter.setMovieList(results);
         } else {
-            mResultView.setText("error");
+            mMovieAdapter.setMovieList(null);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<String> loader) {
 
+    }
+
+    @Override
+    public void onItemClick(Movie movie) {
+        Toast.makeText(this, movie.getTitle(), Toast.LENGTH_SHORT).show();
+    }
+
+    int getViewColumnCount(View view, int preferredWidthResource) {
+        int containerWidth = view.getWidth();
+        int preferredWidth = view.getContext().getResources().
+                getDimensionPixelSize(preferredWidthResource);
+        return containerWidth / preferredWidth;
     }
 }
