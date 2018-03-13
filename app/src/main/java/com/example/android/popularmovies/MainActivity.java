@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.utils.JsonUtils;
-import com.example.android.popularmovies.utils.MovieAdapter;
 import com.example.android.popularmovies.utils.NetworkUtils;
 
 import org.json.JSONException;

@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.utils;
+package com.example.android.popularmovies;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,11 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import static com.example.android.popularmovies.utils.NetworkUtils.getImageUrl;
 
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
@@ -39,6 +40,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         Movie movie = mMovieList.get(position);
         String title = movie.getTitle();
         holder.titleView.setText(title);
+
+        Picasso.with(holder.itemView.getContext())
+                .load(getImageUrl(movie.getPosterPath()))
+                .into(holder.posterView);
     }
 
     @Override
@@ -66,8 +71,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             super(itemView);
             titleView = itemView.findViewById(R.id.movie_item_title);
             posterView = itemView.findViewById(R.id.movie_item_poster);
-            String imageUri = "https://i.imgur.com/DvpvklR.jpg";
-            Picasso.with(itemView.getContext()).load(imageUri).into(posterView);
         }
 
         @Override

@@ -19,6 +19,8 @@ public class NetworkUtils {
 
     private static final String THE_MOVIE_DB_BASE_URL = "http://api.themoviedb.org/3/movie/";
     private static final String PARAM_API_KEY = "api_key";
+    private static final String THE_MOVIE_DB_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
+    private static final String THE_MOVIE_DB_FILE_SIZE = "w500";
 
     public static URL buildUrl(Context context) {
 
@@ -33,6 +35,10 @@ public class NetworkUtils {
             e.printStackTrace();
         }
         return url;
+    }
+
+    public static String getImageUrl(String posterUrl) {
+        return THE_MOVIE_DB_IMAGE_BASE_URL + THE_MOVIE_DB_FILE_SIZE + posterUrl;
     }
 
     public static String getJsonResponseFromUrl(URL url) throws IOException {
