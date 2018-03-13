@@ -1,6 +1,7 @@
 package com.example.android.popularmovies;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -35,11 +36,21 @@ public class MainActivity extends AppCompatActivity implements
 
         mRecyclerView = findViewById(R.id.movies_recycler_view);
         mMovieAdapter = new MovieAdapter(this);
-        int columnCount = getViewColumnCount(mRecyclerView, R.dimen.movie_width);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, Math.max(2,columnCount)));
+
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mRecyclerView.setAdapter(mMovieAdapter);
 
+        View view = this.findViewById(android.R.id.content);
+        view.post(() -> setColumns(view, view.getContext()));
+
         getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
+    }
+
+    private void setColumns(View view, Context context) {
+        int columnCount = getViewColumnCount(view,R.dimen.movie_width);
+        columnCount = Math.max(2, columnCount);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(context, columnCount));
+        mRecyclerView.setAdapter(mMovieAdapter);
     }
 
     @SuppressLint("StaticFieldLeak")
