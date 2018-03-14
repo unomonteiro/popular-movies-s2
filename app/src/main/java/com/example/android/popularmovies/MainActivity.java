@@ -2,6 +2,7 @@ package com.example.android.popularmovies;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -20,6 +21,8 @@ import org.json.JSONException;
 
 import java.net.URL;
 import java.util.List;
+
+import static com.example.android.popularmovies.utils.Contants.INTENT_EXTRA_MOVIE;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<String>, MovieAdapter.ItemClickListener {
@@ -107,7 +110,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClick(Movie movie) {
-        Toast.makeText(this, movie.getTitle(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(INTENT_EXTRA_MOVIE, movie);
+        startActivity(intent);
     }
 
     int getViewColumnCount(View view, int preferredWidthResource) {
