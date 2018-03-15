@@ -6,19 +6,29 @@ import android.os.Parcelable;
 public class Movie implements Parcelable {
 
     private final int mId;
-    private final String mTitle;
+    private final String mOriginalTitle;
     private final String mPosterPath;
+    private final String mOverview;
+    private final double mVoteAverage;
+    private final String mReleaseDate;
 
-    public Movie(int id, String title, String posterPath) {
+    public Movie(int id, String originalTitle, String posterPath, String overview,
+                 double voteAverage, String releaseDate) {
         mId = id;
-        mTitle = title;
+        mOriginalTitle = originalTitle;
         mPosterPath = posterPath;
+        mOverview = overview;
+        mVoteAverage = voteAverage;
+        mReleaseDate = releaseDate;
     }
 
-    protected Movie(Parcel in) {
+    private Movie(Parcel in) {
         mId = in.readInt();
-        mTitle = in.readString();
+        mOriginalTitle = in.readString();
         mPosterPath = in.readString();
+        mOverview = in.readString();
+        mVoteAverage = in.readDouble();
+        mReleaseDate = in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -33,17 +43,36 @@ public class Movie implements Parcelable {
         }
     };
 
-    public String getTitle() {
-        return mTitle;
+    public String getOriginalTitle() {
+        return mOriginalTitle;
     }
 
     public String getPosterPath() {
         return mPosterPath;
     }
 
+    public String getOverview() {
+        return mOverview;
+    }
+
+    public double getVoteAverage() {
+        return mVoteAverage;
+    }
+
+    public String getReleaseDate() {
+        return mReleaseDate;
+    }
+
     @Override
     public String toString() {
-        return "id=" + mId + ", title='" + mTitle + '\'';
+        return "Movie{" +
+                "mId=" + mId +
+                ", mOriginalTitle='" + mOriginalTitle + '\'' +
+                ", mPosterPath='" + mPosterPath + '\'' +
+                ", mOverview='" + mOverview + '\'' +
+                ", mVoteAverage=" + mVoteAverage +
+                ", mReleaseDate='" + mReleaseDate + '\'' +
+                '}';
     }
 
     @Override
@@ -54,7 +83,10 @@ public class Movie implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mId);
-        dest.writeString(mTitle);
+        dest.writeString(mOriginalTitle);
         dest.writeString(mPosterPath);
+        dest.writeString(mOverview);
+        dest.writeDouble(mVoteAverage);
+        dest.writeString(mReleaseDate);
     }
 }

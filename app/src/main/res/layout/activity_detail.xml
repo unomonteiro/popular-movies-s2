@@ -11,11 +11,54 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:showIn="@layout/activity_detail">
+
+            <ImageView
+                android:id="@+id/detail_poster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/movie_poster_content"
+                tools:src="@drawable/shape_of_water"/>
+
+            <TextView
+                android:id="@+id/detail_title"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="43dp"
+                android:background="#66000000"
+                android:textAlignment="center"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                tools:text="Title" />
+
+        </RelativeLayout>
+
         <TextView
-            android:id="@+id/detail_title"
+            android:id="@+id/detail_synopsis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Title"/>
+            tools:text="synopsis"/>
+
+        <TextView
+            android:id="@+id/detail_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="rating"/>
+
+        <TextView
+            android:id="@+id/detail_release_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="release_date"/>
 
     </LinearLayout>
 

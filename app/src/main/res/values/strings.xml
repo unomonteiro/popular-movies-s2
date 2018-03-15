@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Popular Movies</string>
     <!--<string name="tmdb_api_key">THE_MOVIE_DB_API_KEY</string>-->
+    <string name="detail_error_message">Oops, bad movie data!</string>
+    <string name="movie_poster_content">movie_poster</string>
 
 </resources>

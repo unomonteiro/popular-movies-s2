@@ -3,13 +3,15 @@ package com.example.android.popularmovies;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.popularmovies.model.Movie;
+import com.squareup.picasso.Picasso;
 
 import static com.example.android.popularmovies.utils.Contants.INTENT_EXTRA_MOVIE;
+import static com.example.android.popularmovies.utils.NetworkUtils.getImageUrl;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -27,8 +29,18 @@ public class DetailActivity extends AppCompatActivity {
 
         if (intent.hasExtra(INTENT_EXTRA_MOVIE)) {
             mMovie = intent.getParcelableExtra(INTENT_EXTRA_MOVIE);
+            ImageView detailPosterView = findViewById(R.id.detail_poster);
+            Picasso.with(this)
+                    .load(getImageUrl(mMovie.getPosterPath()))
+                    .into(detailPosterView);
             TextView detailTitleView = findViewById(R.id.detail_title);
-            detailTitleView.setText(mMovie.getTitle());
+            detailTitleView.setText(mMovie.getOriginalTitle());
+            TextView synopsisView = findViewById(R.id.detail_synopsis);
+            synopsisView.setText(mMovie.getOverview());
+            TextView ratingView = findViewById(R.id.detail_rating);
+            ratingView.setText(String.valueOf(mMovie.getVoteAverage()));
+            TextView releaseDateView = findViewById(R.id.detail_release_date);
+            releaseDateView.setText(mMovie.getReleaseDate());
         }
 
     }
