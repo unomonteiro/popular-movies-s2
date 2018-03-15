@@ -44,20 +44,26 @@
 
         <TextView
             android:id="@+id/detail_synopsis"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#dd000000"
+            android:textColor="@android:color/white"
             tools:text="synopsis"/>
 
         <TextView
             android:id="@+id/detail_rating"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#dd000000"
+            android:textColor="@android:color/white"
             tools:text="rating"/>
 
         <TextView
             android:id="@+id/detail_release_date"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#dd000000"
+            android:textColor="@android:color/white"
             tools:text="release_date"/>
 
     </LinearLayout>
