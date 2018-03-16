@@ -55,18 +55,16 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.sort, menu);
+        inflater.inflate(R.menu.movies_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_popularity) {
-            Toast.makeText(this, "popularity", Toast.LENGTH_SHORT).show();
-            return true;
-        } else if (id == R.id.action_recent) {
-            Toast.makeText(this, "recent", Toast.LENGTH_SHORT).show();
+        if (id == R.id.action_settings) {
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
             return true;
         }
 
