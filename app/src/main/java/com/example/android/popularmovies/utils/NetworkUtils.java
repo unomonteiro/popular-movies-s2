@@ -2,7 +2,6 @@ package com.example.android.popularmovies.utils;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import com.example.android.popularmovies.R;
 
@@ -22,9 +21,9 @@ public class NetworkUtils {
     private static final String THE_MOVIE_DB_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
     private static final String THE_MOVIE_DB_FILE_SIZE = "w500";
 
-    public static URL buildUrl(Context context) {
+    public static URL buildUrl(Context context, String orderBy) {
 
-        Uri buildUri = Uri.parse(THE_MOVIE_DB_BASE_URL + "popular").buildUpon()
+        Uri buildUri = Uri.parse(THE_MOVIE_DB_BASE_URL + orderBy).buildUpon()
                 .appendQueryParameter(PARAM_API_KEY, context.getString(R.string.tmdb_api_key))
                 .build();
 

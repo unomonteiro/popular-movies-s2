@@ -3,18 +3,19 @@ package com.example.android.popularmovies;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.utils.JsonUtils;
@@ -98,7 +99,12 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public String loadInBackground() {
 
-                URL moviesRequestUrl = NetworkUtils.buildUrl(MainActivity.this);
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                String orderBy = sharedPreferences.getString(
+                        getString(R.string.pref_order_by_key),
+                        getString(R.string.pref_order_by_popular_value));
+
+                URL moviesRequestUrl = NetworkUtils.buildUrl(MainActivity.this, orderBy);
                 try {
                     String jsonResponse = NetworkUtils.getJsonResponseFromUrl(moviesRequestUrl);
                     return jsonResponse;
