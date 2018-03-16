@@ -21,9 +21,9 @@ import static com.example.android.popularmovies.utils.NetworkUtils.getImageUrl;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     private List<Movie> mMovieList;
-    private ItemClickListener mOnClickListener;
+    private final ItemClickListener mOnClickListener;
 
-    public MovieAdapter(ItemClickListener listener) {
+    MovieAdapter(ItemClickListener listener) {
         mOnClickListener = listener;
     }
 
@@ -65,8 +65,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
-        TextView titleView;
-        ImageView posterView;
+        final TextView titleView;
+        final ImageView posterView;
         MovieViewHolder(View itemView) {
             super(itemView);
             titleView = itemView.findViewById(R.id.movie_item_title);

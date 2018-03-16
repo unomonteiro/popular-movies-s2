@@ -23,9 +23,9 @@ public class JsonUtils {
         JSONObject response = new JSONObject(json);
 
         List<Movie> movieList = new ArrayList<>();
-        JSONArray resultsJsonArrray = response.optJSONArray(RESULTS);
-        for (int i = 0; i < resultsJsonArrray.length(); i++) {
-            movieList.add(parseMovie(resultsJsonArrray.getString(i)));
+        JSONArray resultsJsonArray = response.optJSONArray(RESULTS);
+        for (int i = 0; i < resultsJsonArray.length(); i++) {
+            movieList.add(parseMovie(resultsJsonArray.getString(i)));
         }
         return movieList;
     }

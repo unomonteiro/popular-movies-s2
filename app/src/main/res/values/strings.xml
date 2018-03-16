@@ -4,7 +4,6 @@
     <string name="detail_error_message">Oops, bad movie data!</string>
     <string name="movie_poster_content">movie_poster</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_settings">Settings</string>
 
     <!--preferences-->
     <string name="pref_order_by_key" translatable="false">order_by</string>
@@ -15,5 +14,6 @@
 
     <string name="pref_order_by_popular_value" translatable="false">popular</string>
     <string name="pref_order_by_highest_rated_value" translatable="false">top_rated</string>
+    <string name="movie_poster_image_description">Movie Poster</string>
 
 </resources>

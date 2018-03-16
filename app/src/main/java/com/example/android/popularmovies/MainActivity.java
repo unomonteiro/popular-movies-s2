@@ -26,7 +26,7 @@ import org.json.JSONException;
 import java.net.URL;
 import java.util.List;
 
-import static com.example.android.popularmovies.utils.Contants.INTENT_EXTRA_MOVIE;
+import static com.example.android.popularmovies.utils.Constants.INTENT_EXTRA_MOVIE;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<String>, MovieAdapter.ItemClickListener {
@@ -84,16 +84,9 @@ public class MainActivity extends AppCompatActivity implements
     public Loader<String> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<String>(this) {
 
-            String mMovieResults;
-
             @Override
             protected void onStartLoading() {
-
-                if (mMovieResults != null) {
-                    deliverResult(mMovieResults);
-                } else {
-                    forceLoad();
-                }
+                forceLoad();
             }
 
             @Override
@@ -106,8 +99,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 URL moviesRequestUrl = NetworkUtils.buildUrl(MainActivity.this, orderBy);
                 try {
-                    String jsonResponse = NetworkUtils.getJsonResponseFromUrl(moviesRequestUrl);
-                    return jsonResponse;
+                    return NetworkUtils.getJsonResponseFromUrl(moviesRequestUrl);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return null;
@@ -143,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    int getViewColumnCount(View view, int preferredWidthResource) {
+    private int getViewColumnCount(View view, int preferredWidthResource) {
         int containerWidth = view.getWidth();
         int preferredWidth = view.getContext().getResources().
                 getDimensionPixelSize(preferredWidthResource);

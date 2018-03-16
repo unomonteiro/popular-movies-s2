@@ -14,8 +14,6 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
-    public static final String TAG = NetworkUtils.class.getSimpleName();
-
     private static final String THE_MOVIE_DB_BASE_URL = "http://api.themoviedb.org/3/movie/";
     private static final String PARAM_API_KEY = "api_key";
     private static final String THE_MOVIE_DB_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
