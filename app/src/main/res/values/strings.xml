@@ -3,5 +3,7 @@
     <!--<string name="tmdb_api_key">THE_MOVIE_DB_API_KEY</string>-->
     <string name="detail_error_message">Oops, bad movie data!</string>
     <string name="movie_poster_content">movie_poster</string>
+    <string name="menu_item_popular">Most Popular</string>
+    <string name="menu_item_high_rated">Highest-rated</string>
 
 </resources>

@@ -10,6 +10,9 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -47,6 +50,27 @@ public class MainActivity extends AppCompatActivity implements
         view.post(() -> setColumns(view, view.getContext()));
 
         getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.sort, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_popularity) {
+            Toast.makeText(this, "popularity", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (id == R.id.action_recent) {
+            Toast.makeText(this, "recent", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void setColumns(View view, Context context) {
