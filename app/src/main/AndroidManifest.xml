@@ -10,7 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:fullBackupContent="@xml/backup_descriptor">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +25,7 @@
 
         <activity
             android:name=".utils.SettingsActivity"
-            android:label="@string/action_settings"
+            android:label="@string/settings_label"
             android:parentActivityName=".utils.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -32,6 +33,7 @@
         </activity>
         <activity
             android:name=".AboutActivity"
+            android:label="@string/about_label"
             android:parentActivityName=".MainActivity" />
     </application>
 

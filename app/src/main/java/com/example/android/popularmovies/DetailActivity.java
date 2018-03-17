@@ -24,13 +24,10 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent == null) {
             closeOnError();
-        }
-
-        if (intent.hasExtra(INTENT_EXTRA_MOVIE)) {
+        } else if (intent.hasExtra(INTENT_EXTRA_MOVIE)) {
             Movie movie = intent.getParcelableExtra(INTENT_EXTRA_MOVIE);
             populateUI(movie);
         }
-
     }
 
     private void populateUI(Movie movie) {

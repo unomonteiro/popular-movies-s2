@@ -5,13 +5,13 @@
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="1"
-        android:title="@string/action_settings"
+        android:title="@string/settings_label"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_about"
         android:orderInCategory="2"
-        android:title="@string/action_about"
+        android:title="@string/about_label"
         app:showAsAction="never" />
 
 </menu>

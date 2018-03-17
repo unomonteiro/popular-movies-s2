@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.setAdapter(mMovieAdapter);
     }
 
+    @NonNull
     @SuppressLint("StaticFieldLeak")
     @Override
     public Loader<String> onCreateLoader(int id, final Bundle args) {
@@ -115,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoadFinished(Loader<String> loader, String data) {
+    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
         if (data != null) {
             List<Movie> results = null;
             try {
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoaderReset(Loader<String> loader) {
+    public void onLoaderReset(@NonNull Loader<String> loader) {
 
     }
 
