@@ -15,5 +15,6 @@
     <string name="pref_order_by_popular_value" translatable="false">popular</string>
     <string name="pref_order_by_highest_rated_value" translatable="false">top_rated</string>
     <string name="movie_poster_image_description">Movie Poster</string>
+    <string name="rating_in_10">%s/10</string>
 
 </resources>
