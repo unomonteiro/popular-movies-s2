@@ -15,15 +15,4 @@
         android:contentDescription="@string/movie_poster_image_description"
         tools:src="@drawable/shape_of_water"/>
 
-    <TextView
-        android:id="@+id/movie_item_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/movie_item_poster"
-        android:textAlignment="center"
-        tools:text="Title"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:background="#66000000"/>
-
 </RelativeLayout>

@@ -18,15 +18,17 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.model.MovieAdapter;
 import com.example.android.popularmovies.utils.JsonUtils;
 import com.example.android.popularmovies.utils.NetworkUtils;
+import com.example.android.popularmovies.utils.SettingsActivity;
 
 import org.json.JSONException;
 
 import java.net.URL;
 import java.util.List;
 
-import static com.example.android.popularmovies.utils.Constants.INTENT_EXTRA_MOVIE;
+import static com.example.android.popularmovies.DetailActivity.INTENT_EXTRA_MOVIE;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<String>, MovieAdapter.ItemClickListener {
@@ -66,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements
         if (id == R.id.action_settings) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsIntent);
+            return true;
+        } else if (id == R.id.action_about) {
+            Intent aboutIntent = new Intent(this, AboutActivity.class);
+            startActivity(aboutIntent);
             return true;
         }
 

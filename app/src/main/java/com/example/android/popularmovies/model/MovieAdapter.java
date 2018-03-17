@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     private List<Movie> mMovieList;
     private final ItemClickListener mOnClickListener;
 
-    MovieAdapter(ItemClickListener listener) {
+    public MovieAdapter(ItemClickListener listener) {
         mOnClickListener = listener;
     }
 
@@ -39,7 +39,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         Movie movie = mMovieList.get(position);
         String title = movie.getOriginalTitle();
-        holder.titleView.setText(title);
 
         Picasso.with(holder.itemView.getContext())
                 .load(getImageUrl(movie.getPosterPath()))
@@ -65,11 +64,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
-        final TextView titleView;
         final ImageView posterView;
         MovieViewHolder(View itemView) {
             super(itemView);
-            titleView = itemView.findViewById(R.id.movie_item_title);
             posterView = itemView.findViewById(R.id.movie_item_poster);
             itemView.setOnClickListener(this);
         }

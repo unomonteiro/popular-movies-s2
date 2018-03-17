@@ -18,17 +18,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailActivity"
+        <activity
+            android:name=".DetailActivity"
             android:parentActivityName=".MainActivity"/>
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".utils.SettingsActivity"
             android:label="@string/action_settings"
-            android:parentActivityName=".SettingsActivity">
+            android:parentActivityName=".utils.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SettingsActivity" />
+                android:value=".utils.SettingsActivity" />
         </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>
