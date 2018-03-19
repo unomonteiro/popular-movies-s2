@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final int MOVIE_LOADER_ID = 0;
     private RecyclerView mRecyclerView;
+    private View mErrorView;
+    private View mLoadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +55,28 @@ public class MainActivity extends AppCompatActivity implements
 
         View view = this.findViewById(android.R.id.content);
         view.post(() -> setColumns(view, view.getContext()));
+        mErrorView = findViewById(R.id.error_message_view);
+        mLoadingView = findViewById(R.id.loading_view);
 
         getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
+    }
+
+    private void showMovies() {
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mLoadingView.setVisibility(View.GONE);
+        mErrorView.setVisibility(View.GONE);
+    }
+
+    private void showError() {
+        mRecyclerView.setVisibility(View.GONE);
+        mLoadingView.setVisibility(View.GONE);
+        mErrorView.setVisibility(View.VISIBLE);
+    }
+
+    private void showLoading() {
+        mRecyclerView.setVisibility(View.GONE);
+        mLoadingView.setVisibility(View.VISIBLE);
+        mErrorView.setVisibility(View.GONE);
     }
 
     @Override
@@ -101,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements
                     // Use cached data
                     deliverResult(mData);
                 } else {
+                    showLoading();
                     forceLoad();
                 }
             }
@@ -139,8 +162,10 @@ public class MainActivity extends AppCompatActivity implements
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            showMovies();
             mMovieAdapter.setMovieList(results);
         } else {
+            showError();
             mMovieAdapter.setMovieList(null);
         }
     }

@@ -14,4 +14,20 @@
         tools:spanCount="2"
         tools:listitem="@layout/movie_item"/>
 
+    <TextView
+        android:id="@+id/error_message_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="@string/error_message"
+        android:textSize="20sp"
+        android:visibility="invisible" />
+
+    <ProgressBar
+        android:id="@+id/loading_view"
+        android:layout_height="42dp"
+        android:layout_width="42dp"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
+
 </LinearLayout>

@@ -31,10 +31,13 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void populateUI(Movie movie) {
-        ImageView detailPosterView = findViewById(R.id.detail_poster);
-        Picasso.with(this)
-                .load(getImageUrl(movie.getPosterPath()))
-                .into(detailPosterView);
+        String posterUrl = movie.getPosterPath();
+        if (posterUrl != null && posterUrl.trim().length() > 0) {
+            ImageView detailPosterView = findViewById(R.id.detail_poster);
+            Picasso.with(this)
+                    .load(getImageUrl(posterUrl))
+                    .into(detailPosterView);
+        }
         TextView detailTitleView = findViewById(R.id.detail_title);
         detailTitleView.setText(movie.getOriginalTitle());
         TextView synopsisView = findViewById(R.id.detail_synopsis);
