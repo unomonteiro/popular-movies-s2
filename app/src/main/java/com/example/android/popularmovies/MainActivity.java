@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -92,9 +93,16 @@ public class MainActivity extends AppCompatActivity implements
     public Loader<String> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<String>(this) {
 
+            private String mData;
+
             @Override
             protected void onStartLoading() {
-                forceLoad();
+                if (mData != null) {
+                    // Use cached data
+                    deliverResult(mData);
+                } else {
+                    forceLoad();
+                }
             }
 
             @Override
@@ -112,6 +120,12 @@ public class MainActivity extends AppCompatActivity implements
                     e.printStackTrace();
                     return null;
                 }
+            }
+
+            @Override
+            public void deliverResult(@Nullable String data) {
+                mData = data;
+                super.deliverResult(data);
             }
         };
     }
