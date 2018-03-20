@@ -1,6 +1,7 @@
 package com.example.android.popularmovies.utils;
 
 import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.model.Trailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +19,11 @@ public class JsonUtils {
     private static final String OVERVIEW = "overview";
     private static final String VOTE_AVERAGE = "vote_average";
     private static final String RELEASE_DATE = "release_date";
+    private static final String KEY = "key";
+    private static final String TYPE = "type";
+    private static final String TYPE_TRAILER = "Trailer";
+    private static final String NAME = "name";
+
 
     public static List<Movie> parseMovieResultsJson(String json) throws JSONException {
         JSONObject response = new JSONObject(json);
@@ -39,6 +45,28 @@ public class JsonUtils {
         double voteAverage = movieJson.getLong(VOTE_AVERAGE);
         String releaseDate = movieJson.getString(RELEASE_DATE);
         return new Movie(id, originalTitle, posterPath, overview, voteAverage, releaseDate);
+    }
+
+    public static List<Trailer> parseTrailerResultsJson(String json) throws JSONException {
+        JSONObject response = new JSONObject(json);
+
+        List<Trailer> trailerList = new ArrayList<>();
+        JSONArray resultsJsonArray = response.optJSONArray(RESULTS);
+        for (int i = 0; i < resultsJsonArray.length(); i++) {
+            String trailerStr = resultsJsonArray.getString(i);
+            String type = new JSONObject(trailerStr).getString(TYPE);
+            if (type.equalsIgnoreCase(TYPE_TRAILER)) {
+                trailerList.add(parseTrailer(trailerStr));
+            }
+        }
+        return trailerList;
+    }
+
+    private static Trailer parseTrailer(String json) throws JSONException {
+        JSONObject trailerJson = new JSONObject(json);
+        String key = trailerJson.getString(KEY);
+        String name = trailerJson.getString(NAME);
+        return new Trailer(key, name);
     }
 
 }

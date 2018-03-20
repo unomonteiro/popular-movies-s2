@@ -1,74 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.android.popularmovies.DetailActivity">
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <ImageView
-                android:id="@+id/detail_poster"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/small_padding"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/movie_poster_content"
-                tools:src="@drawable/shape_of_water"/>
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="@dimen/small_padding"
-                android:orientation="vertical">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-                <TextView
-                    android:id="@+id/detail_title"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/detail_poster"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/extra_large_text_size"
-                    android:layout_margin="@dimen/small_padding"
-                    tools:text="Title" />
+                    android:padding="@dimen/small_padding"
+                    android:scaleType="centerCrop"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/movie_poster_content"
+                    tools:src="@drawable/shape_of_water"/>
 
-                <TextView
-                    android:id="@+id/detail_release_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/small_padding"
-                    android:textSize="@dimen/medium_text_size"
-                    tools:text="release_date"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:padding="@dimen/small_padding"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/detail_rating"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/small_padding"
-                    android:textSize="@dimen/medium_text_size"
-                    tools:text="rating"/>
+                    <TextView
+                        android:id="@+id/detail_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/extra_large_text_size"
+                        android:layout_margin="@dimen/small_padding"
+                        tools:text="Title" />
+
+                    <TextView
+                        android:id="@+id/detail_release_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_padding"
+                        android:textSize="@dimen/medium_text_size"
+                        tools:text="release_date"/>
+
+                    <TextView
+                        android:id="@+id/detail_rating"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_padding"
+                        android:textSize="@dimen/medium_text_size"
+                        tools:text="rating"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/detail_synopsis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_padding"
+                tools:text="synopsis"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/trailers_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layoutManager="android.support.v7.widget.GridLayoutManager"
+                tools:spanCount="2"
+                tools:listitem="@layout/trailer_item"/>
+
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/detail_synopsis"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_padding"
-            tools:text="synopsis"/>
 
-    </LinearLayout>
 
-</ScrollView>
+    </android.support.v4.widget.NestedScrollView>
+
+
+
+</LinearLayout>
