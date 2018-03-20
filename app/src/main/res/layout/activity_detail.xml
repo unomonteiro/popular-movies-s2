@@ -21,7 +21,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
+                android:padding="@dimen/small_padding"
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/movie_poster_content"
@@ -31,31 +31,31 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:padding="8dp"
+                android:padding="@dimen/small_padding"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/detail_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="24sp"
-                    android:layout_margin="8dp"
+                    android:textSize="@dimen/extra_large_text_size"
+                    android:layout_margin="@dimen/small_padding"
                     tools:text="Title" />
 
                 <TextView
                     android:id="@+id/detail_release_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:textSize="16sp"
+                    android:layout_margin="@dimen/small_padding"
+                    android:textSize="@dimen/medium_text_size"
                     tools:text="release_date"/>
 
                 <TextView
                     android:id="@+id/detail_rating"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:textSize="16sp"
+                    android:layout_margin="@dimen/small_padding"
+                    android:textSize="@dimen/medium_text_size"
                     tools:text="rating"/>
 
             </LinearLayout>
@@ -66,7 +66,7 @@
             android:id="@+id/detail_synopsis"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/small_padding"
             tools:text="synopsis"/>
 
     </LinearLayout>

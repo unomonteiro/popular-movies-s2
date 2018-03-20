@@ -18,9 +18,9 @@
         android:id="@+id/error_message_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:padding="@dimen/medium_padding"
         android:text="@string/error_message"
-        android:textSize="20sp"
+        android:textSize="@dimen/large_text_size"
         android:visibility="invisible" />
 
     <ProgressBar
