@@ -9,8 +9,8 @@
     <ImageView
         android:id="@+id/movie_item_poster"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
         android:adjustViewBounds="true"
         android:contentDescription="@string/movie_poster_image_description"
         tools:src="@drawable/shape_of_water"/>

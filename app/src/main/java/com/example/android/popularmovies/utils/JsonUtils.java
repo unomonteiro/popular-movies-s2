@@ -1,6 +1,7 @@
 package com.example.android.popularmovies.utils;
 
 import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.model.Review;
 import com.example.android.popularmovies.model.Trailer;
 
 import org.json.JSONArray;
@@ -23,6 +24,8 @@ public class JsonUtils {
     private static final String TYPE = "type";
     private static final String TYPE_TRAILER = "Trailer";
     private static final String NAME = "name";
+    private static final String AUTHOR = "author";
+    private static final String CONTENT = "content";
 
 
     public static List<Movie> parseMovieResultsJson(String json) throws JSONException {
@@ -67,6 +70,24 @@ public class JsonUtils {
         String key = trailerJson.getString(KEY);
         String name = trailerJson.getString(NAME);
         return new Trailer(key, name);
+    }
+
+    public static List<Review> parseReviewResultsJson(String json) throws JSONException {
+        JSONObject response = new JSONObject(json);
+
+        List<Review> reviewList = new ArrayList<>();
+        JSONArray resultsJsonArray = response.optJSONArray(RESULTS);
+        for (int i = 0; i < resultsJsonArray.length(); i++) {
+            reviewList.add(parseReview(resultsJsonArray.getString(i)));
+        }
+        return reviewList;
+    }
+
+    private static Review parseReview(String json) throws JSONException {
+        JSONObject reviewJson = new JSONObject(json);
+        String author = reviewJson.getString(AUTHOR);
+        String content = reviewJson.getString(CONTENT);
+        return new Review(author, content);
     }
 
 }

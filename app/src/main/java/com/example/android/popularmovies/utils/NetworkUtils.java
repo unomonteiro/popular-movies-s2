@@ -2,6 +2,7 @@ package com.example.android.popularmovies.utils;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 
 import com.example.android.popularmovies.R;
 
@@ -20,6 +21,7 @@ public class NetworkUtils {
 
     private static final String THE_MOVIE_DB_FILE_SIZE = "w500";
     private static String VIDEOS_SUFIX = "/videos";
+    private static String REVIEWS_SUFIX = "/reviews";
     private static final String YOUTUBE_BASE_URL = "http://www.youtube.com/watch";
     private static final String YOUTUBE_VIDEO = "v";
     private static String YOUTUBE_BASE_THUMBNAIL_URL = "http://img.youtube.com/vi/";
@@ -31,6 +33,20 @@ public class NetworkUtils {
                 .appendQueryParameter(PARAM_API_KEY, context.getString(R.string.tmdb_api_key))
                 .build();
 
+        return getURL(buildUri);
+    }
+
+    public static URL buildTrailersUrl(Context context, String movieId) {
+
+        Uri buildUri = Uri.parse(THE_MOVIE_DB_BASE_URL + movieId + VIDEOS_SUFIX).buildUpon()
+                .appendQueryParameter(PARAM_API_KEY, context.getString(R.string.tmdb_api_key))
+                .build();
+
+        return getURL(buildUri);
+    }
+
+    @Nullable
+    private static URL getURL(Uri buildUri) {
         URL url = null;
         try {
             url = new URL(buildUri.toString());
@@ -40,19 +56,12 @@ public class NetworkUtils {
         return url;
     }
 
-    public static URL buildTrailersUrl(Context context, String movieId) {
-
-        Uri buildUri = Uri.parse(THE_MOVIE_DB_BASE_URL + movieId + VIDEOS_SUFIX).buildUpon()
+    public static URL buildReviewsUrl(Context context, String movieId) {
+        Uri buildUri = Uri.parse(THE_MOVIE_DB_BASE_URL + movieId + REVIEWS_SUFIX).buildUpon()
                 .appendQueryParameter(PARAM_API_KEY, context.getString(R.string.tmdb_api_key))
                 .build();
 
-        URL url = null;
-        try {
-            url = new URL(buildUri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return url;
+        return getURL(buildUri);
     }
 
     public static String getImageUrl(String posterUrl) {

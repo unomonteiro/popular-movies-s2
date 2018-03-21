@@ -19,13 +19,11 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/detail_poster"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="@dimen/movie_width"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/small_padding"
                     android:scaleType="centerCrop"
@@ -78,17 +76,21 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/trailers_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout_height="150dp"
+
                 tools:layoutManager="android.support.v7.widget.GridLayoutManager"
-                tools:spanCount="2"
                 tools:listitem="@layout/trailer_item"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reviews_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layoutManager="android.support.v7.widget.GridLayoutManager"
+                tools:listitem="@layout/review_item"/>
 
         </LinearLayout>
 
-
-
     </android.support.v4.widget.NestedScrollView>
-
-
 
 </LinearLayout>
