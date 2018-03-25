@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+def TMBD_API_KEY = '"' + TMBD_API_KEY + '"' ?: '"Define The Movie Data Base API key"';
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -11,6 +13,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        all {
+            buildConfigField 'String', 'tmdb_api_key ', TMBD_API_KEY
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

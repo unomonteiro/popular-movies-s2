@@ -1,10 +1,9 @@
 package com.example.android.popularmovies.utils;
 
-import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
-import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.BuildConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,19 +26,19 @@ public class NetworkUtils {
     private static String YOUTUBE_BASE_THUMBNAIL_URL = "http://img.youtube.com/vi/";
     private static String YOUTUBE_MAIN_THUMBNAIL_SUFIX = "/0.jpg";
 
-    public static URL buildUrl(Context context, String orderBy) {
+    public static URL buildUrl(String orderBy) {
 
         Uri buildUri = Uri.parse(THE_MOVIE_DB_BASE_URL + orderBy).buildUpon()
-                .appendQueryParameter(PARAM_API_KEY, context.getString(R.string.tmdb_api_key))
+                .appendQueryParameter(PARAM_API_KEY, BuildConfig.tmdb_api_key)
                 .build();
 
         return getURL(buildUri);
     }
 
-    public static URL buildTrailersUrl(Context context, String movieId) {
+    public static URL buildTrailersUrl(String movieId) {
 
         Uri buildUri = Uri.parse(THE_MOVIE_DB_BASE_URL + movieId + VIDEOS_SUFIX).buildUpon()
-                .appendQueryParameter(PARAM_API_KEY, context.getString(R.string.tmdb_api_key))
+                .appendQueryParameter(PARAM_API_KEY, BuildConfig.tmdb_api_key)
                 .build();
 
         return getURL(buildUri);
@@ -56,9 +55,9 @@ public class NetworkUtils {
         return url;
     }
 
-    public static URL buildReviewsUrl(Context context, String movieId) {
+    public static URL buildReviewsUrl(String movieId) {
         Uri buildUri = Uri.parse(THE_MOVIE_DB_BASE_URL + movieId + REVIEWS_SUFIX).buildUpon()
-                .appendQueryParameter(PARAM_API_KEY, context.getString(R.string.tmdb_api_key))
+                .appendQueryParameter(PARAM_API_KEY, BuildConfig.tmdb_api_key)
                 .build();
 
         return getURL(buildUri);

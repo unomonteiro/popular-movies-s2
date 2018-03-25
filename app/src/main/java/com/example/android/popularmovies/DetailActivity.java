@@ -24,8 +24,6 @@ import com.example.android.popularmovies.utils.JsonUtils;
 import com.example.android.popularmovies.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-
 import java.net.URL;
 import java.util.List;
 
@@ -127,7 +125,6 @@ public class DetailActivity extends AppCompatActivity implements
                     }
 
                     URL trailerRequestUrl = NetworkUtils.buildTrailersUrl(
-                            DetailActivity.this,
                             String.valueOf(mMovie.getId()));
                     try {
                         String jsonResponse = NetworkUtils.getJsonResponseFromUrl(trailerRequestUrl);
@@ -188,7 +185,6 @@ public class DetailActivity extends AppCompatActivity implements
                     }
 
                     URL reviewRequestUrl = NetworkUtils.buildReviewsUrl(
-                            DetailActivity.this,
                             String.valueOf(mMovie.getId()));
                     try {
                         String jsonResponse = NetworkUtils.getJsonResponseFromUrl(reviewRequestUrl);

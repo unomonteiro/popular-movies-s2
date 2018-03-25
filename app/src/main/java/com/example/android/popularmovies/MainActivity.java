@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements
                         getString(R.string.pref_order_by_key),
                         getString(R.string.pref_order_by_popular_value));
 
-                URL moviesRequestUrl = NetworkUtils.buildUrl(MainActivity.this, orderBy);
+                URL moviesRequestUrl = NetworkUtils.buildUrl(orderBy);
                 try {
                     return NetworkUtils.getJsonResponseFromUrl(moviesRequestUrl);
                 } catch (Exception e) {
