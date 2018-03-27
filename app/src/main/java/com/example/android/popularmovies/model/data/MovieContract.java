@@ -14,12 +14,12 @@ public class MovieContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_MOVIES).build();
         public static final String TABLE_NAME = "movies";
-        private static final String COLUMN_TITLE = "title";
-        private static final String COLUMN_ORIGINAL_TITLE = "original_title";
-        private static final String COLUMN_POSTER_PATH = "poster_path";
-        private static final String COLUMN_OVERVIEW = "overview";
-        private static final String COLUMN_VOTE_AVERAGE = "vote_average";
-        private static final String COLUMN_RELEASE_DATE = "release_date";
+        static final String COLUMN_TITLE = "title";
+        static final String COLUMN_ORIGINAL_TITLE = "original_title";
+        static final String COLUMN_POSTER_PATH = "poster_path";
+        static final String COLUMN_OVERVIEW = "overview";
+        static final String COLUMN_VOTE_AVERAGE = "vote_average";
+        static final String COLUMN_RELEASE_DATE = "release_date";
     }
 
 }
