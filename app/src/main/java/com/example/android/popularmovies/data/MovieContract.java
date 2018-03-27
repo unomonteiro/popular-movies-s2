@@ -1,11 +1,11 @@
-package com.example.android.popularmovies.model.data;
+package com.example.android.popularmovies.data;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class MovieContract {
 
-    private static final String AUTHORITY = "com.example.android.popularmovies";
+    public static final String AUTHORITY = "com.example.android.popularmovies";
     static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
     static final String PATH_MOVIES = "movies";
 
