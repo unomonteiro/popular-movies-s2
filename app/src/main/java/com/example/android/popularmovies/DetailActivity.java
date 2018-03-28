@@ -11,6 +11,8 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +41,7 @@ public class DetailActivity extends AppCompatActivity implements
     private Movie mMovie;
     private TrailerAdapter mTrailerAdapter;
     private ReviewAdapter mReviewAdapter;
+    private Button mFavoriteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,19 @@ public class DetailActivity extends AppCompatActivity implements
         ratingView.setText(String.format(getString(R.string.rating_in_10), String.valueOf(movie.getVoteAverage())));
         TextView releaseDateView = findViewById(R.id.detail_release_date);
         releaseDateView.setText(movie.getReleaseDate());
+        setupFavoriteButton();
+    }
+
+    private void setupFavoriteButton() {
+        mFavoriteButton = findViewById(R.id.detail_favourite);
+        mFavoriteButton.setText(getString(
+                mMovie.isFavorite() ? R.string.mark_as_favorite : R.string.remove_from_favorite
+        ));
+        mFavoriteButton.setOnClickListener(v -> toogleFavorite());
+    }
+
+    private void toogleFavorite() {
+        Toast.makeText(this, "toogleFavorite!", Toast.LENGTH_SHORT).show();
     }
 
     private void getTrailers() {

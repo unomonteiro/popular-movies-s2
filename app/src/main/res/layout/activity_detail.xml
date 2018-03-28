@@ -40,7 +40,7 @@
 
                     <TextView
                         android:id="@+id/detail_title"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/extra_large_text_size"
                         android:layout_margin="@dimen/small_padding"
@@ -48,7 +48,7 @@
 
                     <TextView
                         android:id="@+id/detail_release_date"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/small_padding"
                         android:textSize="@dimen/medium_text_size"
@@ -56,11 +56,17 @@
 
                     <TextView
                         android:id="@+id/detail_rating"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/small_padding"
                         android:textSize="@dimen/medium_text_size"
                         tools:text="rating"/>
+
+                    <Button
+                        android:id="@+id/detail_favourite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="@string/mark_as_favorite"/>
 
                 </LinearLayout>
 

@@ -47,7 +47,8 @@ public class JsonUtils {
         String overview = movieJson.getString(OVERVIEW);
         double voteAverage = movieJson.getLong(VOTE_AVERAGE);
         String releaseDate = movieJson.getString(RELEASE_DATE);
-        return new Movie(id, originalTitle, posterPath, overview, voteAverage, releaseDate);
+        boolean favorite = false;
+        return new Movie(id, originalTitle, posterPath, overview, voteAverage, releaseDate, favorite);
     }
 
     public static List<Trailer> parseTrailerResultsJson(String json) throws JSONException {

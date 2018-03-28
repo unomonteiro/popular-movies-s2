@@ -22,5 +22,7 @@
     <string name="movie_poster_image_description">Movie Poster</string>
     <string name="rating_in_10">%s/10</string>
     <string name="error_message">Oops something went wrong, check your internet and try again.</string>
+    <string name="mark_as_favorite">Mark as favorite</string>
+    <string name="remove_from_favorite">Remove from favorite</string>
 
 </resources>
