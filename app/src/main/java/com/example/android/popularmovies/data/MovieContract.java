@@ -13,7 +13,7 @@ public class MovieContract {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_MOVIES).build();
-        public static final String TABLE_NAME = "movies";
+        public static final String TABLE_MOVIES = "movies";
         static final String COLUMN_TITLE = "title";
         static final String COLUMN_ORIGINAL_TITLE = "original_title";
         static final String COLUMN_POSTER_PATH = "poster_path";
