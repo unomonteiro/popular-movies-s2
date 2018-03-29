@@ -17,6 +17,11 @@ public class MovieProvider extends ContentProvider {
     /** movie directory.items */
     public static final int CODE_MOVIE_WITH_ID = 101;
 
+    /**
+     * https://www.buzzingandroid.com/2013/01/sqlite-insert-or-replace-through-contentprovider/
+     * */
+    public static final String SQL_INSERT_OR_REPLACE = "__sql_insert_or_replace__";
+
     private static final UriMatcher sUriMatcher = builUriMatcher();
     private MovieDbHelper mMovieDbHelper;
 
@@ -85,11 +90,28 @@ public class MovieProvider extends ContentProvider {
         Uri returnUri;
         switch (sUriMatcher.match(uri)) {
             case CODE_MOVIE: {
-                long _id = db.insert(MovieContract.MovieEntry.TABLE_MOVIES,
-                        null,
-                        values);
-                if (_id > 0 ) {
-                    returnUri = ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, _id);
+                boolean replace = false;
+
+                if (values.containsKey(SQL_INSERT_OR_REPLACE)) {
+                    replace = values.getAsBoolean( SQL_INSERT_OR_REPLACE );
+
+                    // Clone the values object, so we don't modify the original.
+                    // This is not strictly necessary, but depends on your needs
+                    values = new ContentValues( values );
+
+                    // Remove the key, so we don't pass that on to db.insert() or db.replace()
+                    values.remove( SQL_INSERT_OR_REPLACE );
+                }
+
+                long rowId;
+                if ( replace ) {
+                    rowId = db.replace(MovieContract.MovieEntry.TABLE_MOVIES, null, values);
+                } else {
+                    rowId = db.insert(MovieContract.MovieEntry.TABLE_MOVIES, null, values);
+                }
+
+                if (rowId > 0 ) {
+                    returnUri = ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, rowId);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }

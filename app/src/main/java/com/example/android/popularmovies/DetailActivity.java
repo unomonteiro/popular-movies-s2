@@ -2,6 +2,7 @@ package com.example.android.popularmovies;
 
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,12 +35,15 @@ import com.squareup.picasso.Picasso;
 import java.net.URL;
 import java.util.List;
 
+import static com.example.android.popularmovies.data.MovieProvider.SQL_INSERT_OR_REPLACE;
 import static com.example.android.popularmovies.utils.NetworkUtils.getImageUrl;
 import static com.example.android.popularmovies.utils.NetworkUtils.getYoutubeUri;
 
 public class DetailActivity extends AppCompatActivity implements
         TrailerAdapter.TrailerClickListener,
         LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final String TAG = DetailActivity.class.getSimpleName();
 
     public static final String INTENT_EXTRA_MOVIE = "INTENT_EXTRA_MOVIE";
     private static final int TRAILER_LOADER_ID = 1;
@@ -98,19 +103,56 @@ public class DetailActivity extends AppCompatActivity implements
         ratingView.setText(String.format(getString(R.string.rating_in_10), String.valueOf(movie.getVoteAverage())));
         TextView releaseDateView = findViewById(R.id.detail_release_date);
         releaseDateView.setText(movie.getReleaseDate());
-        setupFavoriteButton(mMovie.isFavorite());
+        setupFavoriteButton();
     }
 
-    private void setupFavoriteButton(boolean isFavorite) {
+    private void setupFavoriteButton() {
         mFavoriteButton = findViewById(R.id.detail_favourite);
-        mFavoriteButton.setText(getString(
-                isFavorite ? R.string.remove_favorite : R.string.mark_as_favorite));
         mFavoriteButton.setOnClickListener(v -> toogleFavorite());
     }
 
-    private void toogleFavorite() {
-        Toast.makeText(this, "toogleFavorite!", Toast.LENGTH_SHORT).show();
+    private void updateFavoriteButton(boolean isFavorite) {
+        mFavoriteButton.setText(getString(
+                isFavorite ? R.string.remove_favorite : R.string.mark_as_favorite));
     }
+
+    private void toogleFavorite() {
+        if (mCursor.moveToFirst()) {
+            deleteMovie();
+            updateFavoriteButton(false);
+        } else {
+            createMovie();
+            updateFavoriteButton(true);
+        }
+        Bundle args = new Bundle();
+        args.putInt(ARG_MOVIE_ID, mMovie.getId());
+        getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, args, this);
+    }
+
+    private Uri createMovie() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put( SQL_INSERT_OR_REPLACE, true );
+        contentValues.put(MovieContract.MovieEntry._ID, mMovie.getId());
+        Log.d(TAG, "createMovie: " + mMovie.getId());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_TITLE, mMovie.getTitle());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE, mMovie.getOriginalTitle());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, mMovie.getPosterPath());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, mMovie.getOverview());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, mMovie.getVoteAverage());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, mMovie.getReleaseDate());
+        return getContentResolver().insert(
+                MovieContract.MovieEntry.CONTENT_URI, contentValues);
+    }
+
+    private void deleteMovie() {
+        Uri movieQueryUri = ContentUris.withAppendedId(
+                MovieContract.MovieEntry.CONTENT_URI, mMovie.getId());
+        getContentResolver().delete(movieQueryUri, null, null);
+
+        // COMPLETED (3) Restart the loader to re-query for all tasks after a deletion
+        getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, DetailActivity.this);
+    }
+
 
     private void getTrailers() {
         getSupportLoaderManager().initLoader(TRAILER_LOADER_ID, null, new TrailerLoader());
@@ -157,7 +199,7 @@ public class DetailActivity extends AppCompatActivity implements
         if (data != null && data.moveToFirst())  {
             foundFavorite = true;
         }
-        setupFavoriteButton(foundFavorite);
+        updateFavoriteButton(foundFavorite);
     }
 
     @Override
