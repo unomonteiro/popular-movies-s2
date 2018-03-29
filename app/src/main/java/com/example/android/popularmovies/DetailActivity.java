@@ -1,22 +1,26 @@
 package com.example.android.popularmovies;
 
 import android.annotation.SuppressLint;
+import android.content.ContentUris;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.model.Review;
 import com.example.android.popularmovies.model.ReviewAdapter;
@@ -33,15 +37,19 @@ import static com.example.android.popularmovies.utils.NetworkUtils.getImageUrl;
 import static com.example.android.popularmovies.utils.NetworkUtils.getYoutubeUri;
 
 public class DetailActivity extends AppCompatActivity implements
-        TrailerAdapter.TrailerClickListener {
+        TrailerAdapter.TrailerClickListener,
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String INTENT_EXTRA_MOVIE = "INTENT_EXTRA_MOVIE";
     private static final int TRAILER_LOADER_ID = 1;
     private static final int REVIEW_LOADER_ID = 2;
+    private static final int MOVIE_LOADER_ID = 3;
+    private Cursor mCursor;
     private Movie mMovie;
     private TrailerAdapter mTrailerAdapter;
     private ReviewAdapter mReviewAdapter;
     private Button mFavoriteButton;
+    private String ARG_MOVIE_ID = "MOVIE_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +76,10 @@ public class DetailActivity extends AppCompatActivity implements
             getTrailers();
             getReviews();
         }
+
+        Bundle args = new Bundle();
+        args.putInt(ARG_MOVIE_ID, mMovie.getId());
+        getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, args, this);
     }
 
     private void populateUI(Movie movie) {
@@ -86,14 +98,13 @@ public class DetailActivity extends AppCompatActivity implements
         ratingView.setText(String.format(getString(R.string.rating_in_10), String.valueOf(movie.getVoteAverage())));
         TextView releaseDateView = findViewById(R.id.detail_release_date);
         releaseDateView.setText(movie.getReleaseDate());
-        setupFavoriteButton();
+        setupFavoriteButton(mMovie.isFavorite());
     }
 
-    private void setupFavoriteButton() {
+    private void setupFavoriteButton(boolean isFavorite) {
         mFavoriteButton = findViewById(R.id.detail_favourite);
         mFavoriteButton.setText(getString(
-                mMovie.isFavorite() ? R.string.mark_as_favorite : R.string.remove_from_favorite
-        ));
+                isFavorite ? R.string.remove_favorite : R.string.mark_as_favorite));
         mFavoriteButton.setOnClickListener(v -> toogleFavorite());
     }
 
@@ -112,6 +123,46 @@ public class DetailActivity extends AppCompatActivity implements
     private void closeOnError() {
         finish();
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        switch (id) {
+            case MOVIE_LOADER_ID: {
+                Uri movieQueryUri = ContentUris.withAppendedId(
+                        MovieContract.MovieEntry.CONTENT_URI, mMovie.getId());
+                String selection = null;
+                String[] selectionArgs = null;
+                if (args != null) {
+                    selection = MovieContract.MovieEntry._ID;
+                    selectionArgs = new String[]{String.valueOf(args.getInt(ARG_MOVIE_ID))};
+                }
+                return new CursorLoader(DetailActivity.this,
+                        movieQueryUri,
+                        null,
+                        selection,
+                        selectionArgs,
+                        null);
+            }
+            default:
+                throw new RuntimeException("Loader Not Implemented: " + id);
+        }
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        mCursor = data;
+        boolean foundFavorite = false;
+        if (data != null && data.moveToFirst())  {
+            foundFavorite = true;
+        }
+        setupFavoriteButton(foundFavorite);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        mCursor = null;
     }
 
     class TrailerLoader implements LoaderManager.LoaderCallbacks<List<Trailer>> {
