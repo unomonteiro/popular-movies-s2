@@ -4,21 +4,25 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.model.MovieAdapter;
 import com.example.android.popularmovies.utils.JsonUtils;
@@ -28,16 +32,18 @@ import com.example.android.popularmovies.utils.SettingsActivity;
 import org.json.JSONException;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.android.popularmovies.DetailActivity.INTENT_EXTRA_MOVIE;
 
 public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<String>, MovieAdapter.ItemClickListener {
-
-    private MovieAdapter mMovieAdapter;
+        MovieAdapter.ItemClickListener {
 
     private static final int MOVIE_LOADER_ID = 0;
+    private static final int FAVORITES_LOADER_ID = 1;
+
+    private MovieAdapter mMovieAdapter;
     private RecyclerView mRecyclerView;
     private View mErrorView;
     private View mLoadingView;
@@ -57,8 +63,21 @@ public class MainActivity extends AppCompatActivity implements
         view.post(() -> setColumns(view, view.getContext()));
         mErrorView = findViewById(R.id.error_message_view);
         mLoadingView = findViewById(R.id.loading_view);
+    }
 
-        getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String orderBy = sharedPreferences.getString(
+                getString(R.string.pref_order_by_key),
+                getString(R.string.pref_order_by_popular_value));
+
+        if (orderBy.equals(getString(R.string.pref_order_by_favorites_value))) {
+            getSupportLoaderManager().initLoader(FAVORITES_LOADER_ID, null, new FavoriteLoader());
+        } else {
+            getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, new MovieLoader());
+        }
     }
 
     private void showMovies() {
@@ -109,72 +128,6 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.setAdapter(mMovieAdapter);
     }
 
-    @NonNull
-    @SuppressLint("StaticFieldLeak")
-    @Override
-    public Loader<String> onCreateLoader(int id, final Bundle args) {
-        return new AsyncTaskLoader<String>(this) {
-
-            private String mData;
-
-            @Override
-            protected void onStartLoading() {
-                if (mData != null) {
-                    // Use cached data
-                    deliverResult(mData);
-                } else {
-                    showLoading();
-                    forceLoad();
-                }
-            }
-
-            @Override
-            public String loadInBackground() {
-
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                String orderBy = sharedPreferences.getString(
-                        getString(R.string.pref_order_by_key),
-                        getString(R.string.pref_order_by_popular_value));
-
-                URL moviesRequestUrl = NetworkUtils.buildUrl(orderBy);
-                try {
-                    return NetworkUtils.getJsonResponseFromUrl(moviesRequestUrl);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
-            @Override
-            public void deliverResult(@Nullable String data) {
-                mData = data;
-                super.deliverResult(data);
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
-        if (data != null) {
-            List<Movie> results = null;
-            try {
-                results = JsonUtils.parseMovieResultsJson(data);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            showMovies();
-            mMovieAdapter.setMovieList(results);
-        } else {
-            showError();
-            mMovieAdapter.setMovieList(null);
-        }
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<String> loader) {
-
-    }
-
     @Override
     public void onItemClick(Movie movie) {
         Intent intent = new Intent(this, DetailActivity.class);
@@ -187,5 +140,139 @@ public class MainActivity extends AppCompatActivity implements
         int preferredWidth = view.getContext().getResources().
                 getDimensionPixelSize(preferredWidthResource);
         return containerWidth / preferredWidth;
+    }
+
+    private class MovieLoader implements LoaderManager.LoaderCallbacks<String> {
+        @NonNull
+        @SuppressLint("StaticFieldLeak")
+        @Override
+        public Loader<String> onCreateLoader(int id, final Bundle args) {
+            return new AsyncTaskLoader<String>(MainActivity.this) {
+
+                private String mData;
+
+                @Override
+                protected void onStartLoading() {
+                    if (mData != null) {
+                        // Use cached data
+                        deliverResult(mData);
+                    } else {
+                        showLoading();
+                        forceLoad();
+                    }
+                }
+
+                @Override
+                public String loadInBackground() {
+
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                    String orderBy = sharedPreferences.getString(
+                            getString(R.string.pref_order_by_key),
+                            getString(R.string.pref_order_by_popular_value));
+
+                    URL moviesRequestUrl = NetworkUtils.buildUrl(orderBy);
+                    try {
+                        return NetworkUtils.getJsonResponseFromUrl(moviesRequestUrl);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+
+                @Override
+                public void deliverResult(@Nullable String data) {
+                    mData = data;
+                    super.deliverResult(data);
+                }
+            };
+        }
+
+        @Override
+        public void onLoadFinished(@NonNull Loader<String> loader, String data) {
+            if (data != null) {
+                List<Movie> results = null;
+                try {
+                    results = JsonUtils.parseMovieResultsJson(data);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                showMovies();
+                mMovieAdapter.setMovieList(results);
+            } else {
+                showError();
+                mMovieAdapter.setMovieList(null);
+            }
+        }
+
+        @Override
+        public void onLoaderReset(@NonNull Loader<String> loader) {
+
+        }
+    }
+
+    class FavoriteLoader implements LoaderManager.LoaderCallbacks<Cursor> {
+
+        private static final String TAG = "FavoriteLoader";
+
+        @NonNull
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+            switch (id) {
+
+                case FAVORITES_LOADER_ID:
+                    return new CursorLoader(MainActivity.this,
+                            MovieContract.MovieEntry.CONTENT_URI,
+                            null,
+                            null,
+                            null,
+                            null);
+
+                default:
+                    throw new RuntimeException("Loader Not Implemented: " + id);
+            }
+        }
+
+        @Override
+        public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+            List<Movie> results = null;
+            if (data != null && data.moveToFirst()) {
+                results = getMovieListFromCursor(data);
+                showMovies();
+                mMovieAdapter.setMovieList(results);
+            } else {
+                showError();
+                mMovieAdapter.setMovieList(null);
+            }
+        }
+
+        @Override
+        public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+            Log.d(TAG, "clm+ onLoaderReset() ");
+        }
+
+        @NonNull
+        private List<Movie> getMovieListFromCursor(Cursor data) {
+            List<Movie> results = new ArrayList<>();
+            int idIndex = data.getColumnIndex(MovieContract.MovieEntry._ID);
+            int titleIndex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
+            int originalTitleIndex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
+            int posterPathIndex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH);
+            int overviewIndex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_OVERVIEW);
+            int voteAverageIndex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE);
+            int releaseDateIndex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE);
+
+            do {
+                results.add(new Movie(
+                        data.getInt(idIndex),
+                        data.getString(titleIndex),
+                        data.getString(originalTitleIndex),
+                        data.getString(posterPathIndex),
+                        data.getString(overviewIndex),
+                        data.getDouble(voteAverageIndex),
+                        data.getString(releaseDateIndex),
+                        true));
+            } while (data.moveToNext());
+            return results;
+        }
     }
 }
