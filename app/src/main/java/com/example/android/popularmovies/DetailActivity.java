@@ -30,6 +30,7 @@ import com.example.android.popularmovies.model.Trailer;
 import com.example.android.popularmovies.model.TrailerAdapter;
 import com.example.android.popularmovies.utils.JsonUtils;
 import com.example.android.popularmovies.utils.NetworkUtils;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
@@ -93,6 +94,7 @@ public class DetailActivity extends AppCompatActivity implements
             ImageView detailPosterView = findViewById(R.id.detail_poster);
             Picasso.with(this)
                     .load(getImageUrl(posterUrl))
+                    .networkPolicy(NetworkPolicy.OFFLINE)
                     .into(detailPosterView);
         }
         TextView detailTitleView = findViewById(R.id.detail_title);

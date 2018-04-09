@@ -74,8 +74,10 @@ public class MainActivity extends AppCompatActivity implements
                 getString(R.string.pref_order_by_popular_value));
 
         if (orderBy.equals(getString(R.string.pref_order_by_favorites_value))) {
+            getSupportLoaderManager().destroyLoader(MOVIE_LOADER_ID);
             getSupportLoaderManager().initLoader(FAVORITES_LOADER_ID, null, new FavoriteLoader());
         } else {
+            getSupportLoaderManager().destroyLoader(FAVORITES_LOADER_ID);
             getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, new MovieLoader());
         }
     }
@@ -255,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements
             List<Movie> results = new ArrayList<>();
             int idIndex = data.getColumnIndex(MovieContract.MovieEntry._ID);
             int titleIndex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
-            int originalTitleIndex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
+            int originalTitleIndex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE);
             int posterPathIndex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH);
             int overviewIndex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_OVERVIEW);
             int voteAverageIndex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE);

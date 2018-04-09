@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.android.popularmovies.R;
 import com.squareup.picasso.Picasso;
@@ -37,6 +38,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         Movie movie = mMovieList.get(position);
+        String title = movie.getOriginalTitle();
+        holder.titleView.setText(title);
 
         Picasso.with(holder.itemView.getContext())
                 .load(getImageUrl(movie.getPosterPath()))
@@ -63,9 +66,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     class MovieViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
         final ImageView posterView;
+        final TextView titleView;
         MovieViewHolder(View itemView) {
             super(itemView);
             posterView = itemView.findViewById(R.id.movie_item_poster);
+            titleView = itemView.findViewById(R.id.movie_item_title);
             itemView.setOnClickListener(this);
         }
 
