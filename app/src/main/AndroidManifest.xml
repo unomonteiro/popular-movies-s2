@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:launchMode="singleTop"
         android:fullBackupContent="@xml/backup_descriptor">
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -35,6 +36,10 @@
             android:name=".AboutActivity"
             android:label="@string/about_label"
             android:parentActivityName=".MainActivity" />
+        <provider
+            android:authorities="com.example.android.popularmovies"
+            android:name=".data.MovieProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

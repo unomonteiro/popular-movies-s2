@@ -15,12 +15,17 @@
 
     <string name="pref_order_by_popular_label">Most Popular</string>
     <string name="pref_order_by_highest_rated_label">Highest Rated</string>
+    <string name="pref_order_by_favorites_label">Favorites</string>
 
     <string name="pref_order_by_popular_value" translatable="false">popular</string>
     <string name="pref_order_by_highest_rated_value" translatable="false">top_rated</string>
+    <string name="pref_order_by_favorites_value" translatable="false">favorites</string>
+    <!--preferences-->
 
     <string name="movie_poster_image_description">Movie Poster</string>
     <string name="rating_in_10">%s/10</string>
     <string name="error_message">Oops something went wrong, check your internet and try again.</string>
+    <string name="mark_as_favorite">Mark as favorite</string>
+    <string name="remove_favorite">Remove favorite</string>
 
 </resources>

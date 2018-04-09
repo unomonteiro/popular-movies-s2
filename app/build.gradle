@@ -14,7 +14,7 @@ android {
     }
     buildTypes {
         all {
-            buildConfigField 'String', 'tmdb_api_key ', TMBD_API_KEY
+            buildConfigField 'String', 'tmdb_api_key', TMBD_API_KEY
         }
         release {
             minifyEnabled false
