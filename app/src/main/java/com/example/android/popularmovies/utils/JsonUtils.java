@@ -29,10 +29,10 @@ public class JsonUtils {
     private static final String CONTENT = "content";
 
 
-    public static List<Movie> parseMovieResultsJson(String json) throws JSONException {
+    public static ArrayList<Movie> parseMovieResultsJson(String json) throws JSONException {
         JSONObject response = new JSONObject(json);
 
-        List<Movie> movieList = new ArrayList<>();
+        ArrayList<Movie> movieList = new ArrayList<>();
         JSONArray resultsJsonArray = response.optJSONArray(RESULTS);
         for (int i = 0; i < resultsJsonArray.length(); i++) {
             movieList.add(parseMovie(resultsJsonArray.getString(i)));

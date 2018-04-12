@@ -24,6 +24,7 @@
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:background="#66000000"
+        android:visibility="gone"
         tools:text="Title"/>
 
 </RelativeLayout>

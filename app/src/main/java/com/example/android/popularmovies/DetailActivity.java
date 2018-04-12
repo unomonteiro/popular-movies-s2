@@ -151,7 +151,7 @@ public class DetailActivity extends AppCompatActivity implements
                 MovieContract.MovieEntry.CONTENT_URI, mMovie.getId());
         getContentResolver().delete(movieQueryUri, null, null);
 
-        // COMPLETED (3) Restart the loader to re-query for all tasks after a deletion
+        // Restart the loader to re-query for all tasks after a deletion
         getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, DetailActivity.this);
     }
 
@@ -331,7 +331,10 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onTrailerClick(Trailer trailer) {
-        startActivity(new Intent(Intent.ACTION_VIEW, getYoutubeUri(trailer.getKey())));
+        Intent youtubeIntent = new Intent(Intent.ACTION_VIEW, getYoutubeUri(trailer.getKey()));
+        if (youtubeIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(youtubeIntent);
+        }
     }
 
 

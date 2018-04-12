@@ -17,6 +17,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,20 +34,24 @@ import org.json.JSONException;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.example.android.popularmovies.DetailActivity.INTENT_EXTRA_MOVIE;
 
 public class MainActivity extends AppCompatActivity implements
-        MovieAdapter.ItemClickListener {
+        MovieAdapter.ItemClickListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int MOVIE_LOADER_ID = 0;
     private static final int FAVORITES_LOADER_ID = 1;
+    private static final String MOVIE_LIST_KEY = "MOVIE_LIST_KEY";
+    private static final int MINIMUM_NUMBER_OF_COLUMNS = 2;
 
     private MovieAdapter mMovieAdapter;
     private RecyclerView mRecyclerView;
     private View mErrorView;
     private View mLoadingView;
+    private String mOrderBy;
+    private ArrayList<Movie> mMovieList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,30 +61,78 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView = findViewById(R.id.movies_recycler_view);
         mMovieAdapter = new MovieAdapter(this);
 
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        GridAutoFitLayoutManager gridLayoutManager = new GridAutoFitLayoutManager(this,
+                getResources().getDimensionPixelSize(R.dimen.movie_width));
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+
         mRecyclerView.setAdapter(mMovieAdapter);
 
-        View view = this.findViewById(android.R.id.content);
-        view.post(() -> setColumns(view, view.getContext()));
         mErrorView = findViewById(R.id.error_message_view);
         mLoadingView = findViewById(R.id.loading_view);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String orderBy = sharedPreferences.getString(
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        mOrderBy = sharedPreferences.getString(
                 getString(R.string.pref_order_by_key),
                 getString(R.string.pref_order_by_popular_value));
 
-        if (orderBy.equals(getString(R.string.pref_order_by_favorites_value))) {
-            getSupportLoaderManager().destroyLoader(MOVIE_LOADER_ID);
+        if (savedInstanceState == null) {
+            initLoaders();
+        } else {
+            mMovieList = savedInstanceState.getParcelableArrayList(MOVIE_LIST_KEY);
+            showMovies();
+            mMovieAdapter.setMovieList(mMovieList);
+        }
+    }
+
+    private void initLoaders() {
+        mMovieList = null;
+        getSupportLoaderManager().destroyLoader(MOVIE_LOADER_ID);
+        getSupportLoaderManager().destroyLoader(FAVORITES_LOADER_ID);
+        if (mOrderBy.equals(getString(R.string.pref_order_by_favorites_value))) {
             getSupportLoaderManager().initLoader(FAVORITES_LOADER_ID, null, new FavoriteLoader());
         } else {
-            getSupportLoaderManager().destroyLoader(FAVORITES_LOADER_ID);
             getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, new MovieLoader());
         }
+    }
+
+    private void setColumns(View view, Context context) {
+        int columnCount = getViewColumnCount(view,R.dimen.movie_width);
+        columnCount = Math.max(2, columnCount);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(context, columnCount));
+        mRecyclerView.setAdapter(mMovieAdapter);
+    }
+
+    private int getViewColumnCount(View view, int preferredWidthResource) {
+        int containerWidth = view.getWidth();
+        int preferredWidth = view.getContext().getResources().
+                getDimensionPixelSize(preferredWidthResource);
+        return containerWidth / preferredWidth;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        pref.unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_order_by_key))) {
+
+            mOrderBy = sharedPreferences.getString(
+                    getString(R.string.pref_order_by_key),
+                    getString(R.string.pref_order_by_popular_value));
+
+            initLoaders();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(MOVIE_LIST_KEY, mMovieList);
     }
 
     private void showMovies() {
@@ -123,13 +176,6 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    private void setColumns(View view, Context context) {
-        int columnCount = getViewColumnCount(view,R.dimen.movie_width);
-        columnCount = Math.max(2, columnCount);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(context, columnCount));
-        mRecyclerView.setAdapter(mMovieAdapter);
-    }
-
     @Override
     public void onItemClick(Movie movie) {
         Intent intent = new Intent(this, DetailActivity.class);
@@ -137,21 +183,15 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    private int getViewColumnCount(View view, int preferredWidthResource) {
-        int containerWidth = view.getWidth();
-        int preferredWidth = view.getContext().getResources().
-                getDimensionPixelSize(preferredWidthResource);
-        return containerWidth / preferredWidth;
-    }
-
     private class MovieLoader implements LoaderManager.LoaderCallbacks<String> {
+
+        private String mData;
+
         @NonNull
         @SuppressLint("StaticFieldLeak")
         @Override
         public Loader<String> onCreateLoader(int id, final Bundle args) {
             return new AsyncTaskLoader<String>(MainActivity.this) {
-
-                private String mData;
 
                 @Override
                 protected void onStartLoading() {
@@ -192,14 +232,14 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public void onLoadFinished(@NonNull Loader<String> loader, String data) {
             if (data != null) {
-                List<Movie> results = null;
+                mMovieList = null;
                 try {
-                    results = JsonUtils.parseMovieResultsJson(data);
+                    mMovieList = JsonUtils.parseMovieResultsJson(data);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 showMovies();
-                mMovieAdapter.setMovieList(results);
+                mMovieAdapter.setMovieList(mMovieList);
             } else {
                 showError();
                 mMovieAdapter.setMovieList(null);
@@ -208,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements
 
         @Override
         public void onLoaderReset(@NonNull Loader<String> loader) {
-
+            mData = null;
         }
     }
 
@@ -236,11 +276,11 @@ public class MainActivity extends AppCompatActivity implements
 
         @Override
         public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-            List<Movie> results = null;
+            mMovieList = null;
             if (data != null && data.moveToFirst()) {
-                results = getMovieListFromCursor(data);
+                mMovieList = getMovieListFromCursor(data);
                 showMovies();
-                mMovieAdapter.setMovieList(results);
+                mMovieAdapter.setMovieList(mMovieList);
             } else {
                 showError();
                 mMovieAdapter.setMovieList(null);
@@ -253,8 +293,8 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         @NonNull
-        private List<Movie> getMovieListFromCursor(Cursor data) {
-            List<Movie> results = new ArrayList<>();
+        private ArrayList<Movie> getMovieListFromCursor(Cursor data) {
+            ArrayList<Movie> results = new ArrayList<>();
             int idIndex = data.getColumnIndex(MovieContract.MovieEntry._ID);
             int titleIndex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
             int originalTitleIndex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE);
@@ -275,6 +315,46 @@ public class MainActivity extends AppCompatActivity implements
                         true));
             } while (data.moveToNext());
             return results;
+        }
+    }
+
+    public static class GridAutoFitLayoutManager extends GridLayoutManager {
+
+        private int mColumnWidth;
+        private boolean mColumnWidthChanged = true;
+
+        public GridAutoFitLayoutManager(Context context, int columnWidth) {
+            super(context, 1);
+            setColumnWidth(columnWidth);
+        }
+
+        public GridAutoFitLayoutManager(Context context, int columnWidth, int orientation, boolean reverseLayout) {
+            /* Initially set spanCount to 1, will be changed automatically later. */
+            super(context, 1, orientation, reverseLayout);
+            setColumnWidth(columnWidth);
+        }
+
+        public void setColumnWidth(int newColumnWidth) {
+            if (newColumnWidth > 0 && newColumnWidth != mColumnWidth) {
+                mColumnWidth = newColumnWidth;
+                mColumnWidthChanged = true;
+            }
+        }
+
+        @Override
+        public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+            if (mColumnWidthChanged && mColumnWidth > 0) {
+                int totalSpace;
+                if (getOrientation() == VERTICAL) {
+                    totalSpace = getWidth() - getPaddingRight() - getPaddingLeft();
+                } else {
+                    totalSpace = getHeight() - getPaddingTop() - getPaddingBottom();
+                }
+                int spanCount = Math.max(MINIMUM_NUMBER_OF_COLUMNS, totalSpace / mColumnWidth);
+                setSpanCount(spanCount);
+                mColumnWidthChanged = false;
+            }
+            super.onLayoutChildren(recycler, state);
         }
     }
 }
